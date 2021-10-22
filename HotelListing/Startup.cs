@@ -1,4 +1,7 @@
+using HotelListing.Configurations;
 using HotelListing.Data;
+using HotelListing.IRepository;
+using HotelListing.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -28,6 +31,14 @@ namespace HotelListing
             services.AddDbContext<DatabaseContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
            );
+
+            services.AddAutoMapper(typeof(MapperInitilizer));
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
+            services.AddControllers().AddNewtonsoftJson(op =>
+               op.SerializerSettings.ReferenceLoopHandling =
+                   Newtonsoft.Json.ReferenceLoopHandling.Ignore);   
 
             services.AddCors(o => {
                 o.AddPolicy("AllowAll", builder =>
@@ -61,7 +72,7 @@ namespace HotelListing
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
         }
     }

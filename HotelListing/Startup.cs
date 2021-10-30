@@ -32,6 +32,10 @@ namespace HotelListing
                options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"))
            );
 
+            services.AddAuthentication();
+            //this function is inside the ServiceExtensions File
+            services.ConfigureIdentity();
+
             services.AddAutoMapper(typeof(MapperInitilizer));
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
